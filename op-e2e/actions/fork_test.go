@@ -13,10 +13,10 @@ import (
 func TestShapellaL1Fork(gt *testing.T) {
 	t := NewDefaultTesting(gt)
 	dp := e2eutils.MakeDeployParams(t, defaultRollupTestParams)
+	activationOffset := uint64(24)
+	dp.DeployConfig.L1ShanghaiTimeOffset = &activationOffset
 
 	sd := e2eutils.Setup(t, dp, defaultAlloc)
-	activation := sd.L1Cfg.Timestamp + 24
-	sd.L1Cfg.Config.ShanghaiTime = &activation
 	log := testlog.Logger(t, log.LvlDebug)
 
 	_, _, miner, sequencer, _, verifier, _, batcher := setupReorgTestActors(t, dp, sd, log)

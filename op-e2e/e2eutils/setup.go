@@ -89,6 +89,8 @@ func MakeDeployParams(t require.TestingT, tp *TestParams) *DeployParams {
 		L1GenesisBlockBaseFeePerGas: uint64ToBig(1000_000_000), // 1 gwei
 		FinalizationPeriodSeconds:   12,
 
+		L1ShanghaiTimeOffset: new(uint64), // activate Shanghai on L1 by default
+
 		L2GenesisBlockNonce:         0,
 		L2GenesisBlockGasLimit:      30_000_000,
 		L2GenesisBlockDifficulty:    uint64ToBig(0),
@@ -270,6 +272,7 @@ func ForkedDeployConfig(t require.TestingT, mnemonicCfg *MnemonicConfig, startBl
 		FinalSystemOwner:                 addrs.SysCfgOwner,
 		L1GenesisBlockDifficulty:         uint64ToBig(0),
 		L1GenesisBlockBaseFeePerGas:      uint64ToBig(0),
+		L1ShanghaiTimeOffset:             new(uint64), // activate Shanghai on L1 by default
 		L2OutputOracleSubmissionInterval: 10,
 		L2OutputOracleStartingTimestamp:  int(startBlock.Time()),
 		L2OutputOracleProposer:           addrs.Proposer,

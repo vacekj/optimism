@@ -22,7 +22,7 @@ const defaultL2GasLimit = 30_000_000
 var BedrockTransitionBlockExtraData = []byte("BEDROCK")
 
 // NewL2Genesis will create a new L2 genesis
-func NewL2Genesis(config *DeployConfig, block *types.Block) (*core.Genesis, error) {
+func NewL2Genesis(config *DeployConfig, l1StartBlock *types.Block) (*core.Genesis, error) {
 	if config.L2ChainID == 0 {
 		return nil, errors.New("must define L2 ChainID")
 	}
@@ -57,7 +57,7 @@ func NewL2Genesis(config *DeployConfig, block *types.Block) (*core.Genesis, erro
 		TerminalTotalDifficulty:       big.NewInt(0),
 		TerminalTotalDifficultyPassed: true,
 		BedrockBlock:                  new(big.Int).SetUint64(uint64(config.L2GenesisBlockNumber)),
-		RegolithTime:                  config.RegolithTime(block.Time()),
+		RegolithTime:                  config.RegolithTime(l1StartBlock.Time()),
 		Optimism: &params.OptimismConfig{
 			EIP1559Denominator: eip1559Denom,
 			EIP1559Elasticity:  eip1559Elasticity,
@@ -90,7 +90,7 @@ func NewL2Genesis(config *DeployConfig, block *types.Block) (*core.Genesis, erro
 	return &core.Genesis{
 		Config:     &optimismChainConfig,
 		Nonce:      uint64(config.L2GenesisBlockNonce),
-		Timestamp:  block.Time(),
+		Timestamp:  l1StartBlock.Time(),
 		ExtraData:  extraData,
 		GasLimit:   uint64(gasLimit),
 		Difficulty: difficulty.ToInt(),
@@ -127,7 +127,7 @@ func NewL1Genesis(config *DeployConfig) (*core.Genesis, error) {
 		LondonBlock:         big.NewInt(0),
 		ArrowGlacierBlock:   big.NewInt(0),
 		GrayGlacierBlock:    big.NewInt(0),
-		ShanghaiTime:        u64ptr(0),
+		// shanghai and later are configured dynamically, based on deploy-config
 	}
 
 	if config.CliqueSignerAddress != (common.Address{}) {
@@ -159,6 +159,7 @@ func NewL1Genesis(config *DeployConfig) (*core.Genesis, error) {
 	if timestamp == 0 {
 		timestamp = hexutil.Uint64(time.Now().Unix())
 	}
+	chainConfig.ShanghaiTime = config.ShanghaiTime(uint64(timestamp))
 
 	extraData := make([]byte, 0)
 	if config.CliqueSignerAddress != (common.Address{}) {
@@ -180,8 +181,4 @@ func NewL1Genesis(config *DeployConfig) (*core.Genesis, error) {
 		BaseFee:    baseFee.ToInt(),
 		Alloc:      map[common.Address]core.GenesisAccount{},
 	}, nil
-}
-
-func u64ptr(n uint64) *uint64 {
-	return &n
 }

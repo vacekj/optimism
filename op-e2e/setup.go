@@ -114,6 +114,8 @@ func DefaultSystemConfig(t *testing.T) SystemConfig {
 		L1GenesisBlockParentHash:    common.Hash{},
 		L1GenesisBlockBaseFeePerGas: uint642big(7),
 
+		L1ShanghaiTimeOffset: new(uint64),
+
 		L2GenesisBlockNonce:         0,
 		L2GenesisBlockGasLimit:      30_000_000,
 		L2GenesisBlockDifficulty:    uint642big(1),

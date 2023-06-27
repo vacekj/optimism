@@ -40,11 +40,11 @@ type Deployment struct {
 
 type Deployer func(*backends.SimulatedBackend, *bind.TransactOpts, Constructor) (*types.Transaction, error)
 
-func NewBackend() *backends.SimulatedBackend {
-	return NewBackendWithGenesisTimestamp(0)
+func NewL2Backend() *backends.SimulatedBackend {
+	return NewBackendWithGenesisTimestamp(0, false)
 }
 
-func NewBackendWithGenesisTimestamp(ts uint64) *backends.SimulatedBackend {
+func NewBackendWithGenesisTimestamp(ts uint64, shanghai bool) *backends.SimulatedBackend {
 	chainConfig := params.ChainConfig{
 		ChainID:             ChainID,
 		HomesteadBlock:      big.NewInt(0),
@@ -68,6 +68,9 @@ func NewBackendWithGenesisTimestamp(ts uint64) *backends.SimulatedBackend {
 		MergeNetsplitBlock:            big.NewInt(0),
 		TerminalTotalDifficulty:       big.NewInt(0),
 		TerminalTotalDifficultyPassed: true,
+	}
+	if shanghai {
+		chainConfig.ShanghaiTime = new(uint64)
 	}
 
 	return backends.NewSimulatedBackendWithOpts(

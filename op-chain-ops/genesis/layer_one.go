@@ -76,7 +76,7 @@ func BuildL1DeveloperGenesis(config *DeployConfig) (*core.Genesis, error) {
 		return nil, err
 	}
 
-	backend := deployer.NewBackendWithGenesisTimestamp(uint64(config.L1GenesisBlockTimestamp))
+	backend := deployer.NewBackendWithGenesisTimestamp(uint64(config.L1GenesisBlockTimestamp), genesis.Config.IsShanghai(genesis.Timestamp))
 
 	deployments, err := deployL1Contracts(config, backend)
 	if err != nil {

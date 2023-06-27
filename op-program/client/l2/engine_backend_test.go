@@ -209,6 +209,7 @@ func setupOracle(t *testing.T, blockCount int, headBlockNumber int) (*params.Cha
 		L1ChainID:              900,
 		L2ChainID:              901,
 		L2BlockTime:            2,
+		L1ShanghaiTimeOffset:   new(uint64),
 		FundDevAccounts:        true,
 		L2GenesisBlockGasLimit: 30_000_000,
 		// Arbitrary non-zero difficulty in genesis.

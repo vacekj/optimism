@@ -72,6 +72,9 @@ type DeployConfig struct {
 	// Seconds after genesis block that Regolith hard fork activates. 0 to activate at genesis. Nil to disable regolith
 	L2GenesisRegolithTimeOffset *hexutil.Uint64 `json:"l2GenesisRegolithTimeOffset,omitempty"`
 
+	// Seconds after genesis block that Shanghai hard fork activates. 0 to activate at genesis. Nil to disable shanghai
+	L1ShanghaiTimeOffset *uint64 `json:"l1GenesisShanghaiTimeOffset,omitempty"`
+
 	// Configurable extradata. Will default to []byte("BEDROCK") if left unspecified.
 	L2GenesisBlockExtraData []byte `json:"l2GenesisBlockExtraData"`
 
@@ -331,6 +334,17 @@ func (d *DeployConfig) RegolithTime(genesisTime uint64) *uint64 {
 	}
 	v := uint64(0)
 	if offset := *d.L2GenesisRegolithTimeOffset; offset > 0 {
+		v = genesisTime + uint64(offset)
+	}
+	return &v
+}
+
+func (d *DeployConfig) ShanghaiTime(genesisTime uint64) *uint64 {
+	if d.L1ShanghaiTimeOffset == nil {
+		return nil
+	}
+	v := uint64(0)
+	if offset := *d.L1ShanghaiTimeOffset; offset > 0 {
 		v = genesisTime + uint64(offset)
 	}
 	return &v
