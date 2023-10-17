@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.15;
 
+import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { ERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 import { IERC165 } from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import { ILegacyMintableERC20, IOptimismMintableERC20 } from "./IOptimismMintableERC20.sol";
@@ -12,7 +13,7 @@ import { Semver } from "../universal/Semver.sol";
 ///         use an OptimismMintablERC20 as the L2 representation of an L1 token, or vice-versa.
 ///         Designed to be backwards compatible with the older StandardL2ERC20 token which was only
 ///         meant for use on L2.
-contract OptimismMintableERC20 is IOptimismMintableERC20, ILegacyMintableERC20, ERC20Permit, Semver {
+contract OptimismMintableERC20 is IOptimismMintableERC20, ILegacyMintableERC20, ERC20, ERC20Permit, Semver {
     /// @notice Address of the corresponding version of this token on the remote chain.
     address public immutable REMOTE_TOKEN;
 
@@ -51,6 +52,7 @@ contract OptimismMintableERC20 is IOptimismMintableERC20, ILegacyMintableERC20, 
         uint8 _decimals
     )
         ERC20(_name, _symbol)
+        ERC20Permit(_name)
         Semver(1, 2, 0)
     {
         REMOTE_TOKEN = _remoteToken;
